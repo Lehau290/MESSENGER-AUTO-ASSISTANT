@@ -1,0 +1,41 @@
+{
+  "name": "messenger-auto-assistant-desktop",
+  "version": "1.0.0",
+  "description": "Desktop Windows 10/11 App for Messenger Auto Assistant",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "build:electron": "tsc -p tsconfig.json",
+    "dev": "npm run build:electron && electron .",
+    "start": "electron .",
+    "package:win": "npm run build:electron && electron-builder --win --dir",
+    "dist:win": "npm run build:electron && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "electron-is-dev": "^3.0.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2"
+  },
+  "build": {
+    "appId": "com.messenger.autoassistant",
+    "productName": "Messenger Auto Assistant",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Messenger Auto Assistant"
+    }
+  }
+}

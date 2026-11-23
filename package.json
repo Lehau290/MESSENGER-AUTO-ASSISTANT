@@ -1,0 +1,25 @@
+{
+  "name": "messenger-auto-assistant",
+  "version": "1.0.0",
+  "description": "Phần mềm hỗ trợ quản lý và tự động hóa tin nhắn Facebook cá nhân bằng AI (Web & Desktop Windows)",
+  "private": true,
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install && cd ../desktop && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:desktop": "cd desktop && npm run dev",
+    "build:all": "cd backend && npm run build && cd ../frontend && npm run build && cd ../desktop && npm run build:win"
+  },
+  "keywords": [
+    "messenger",
+    "assistant",
+    "ai",
+    "facebook",
+    "automation",
+    "electron",
+    "react",
+    "nodejs"
+  ],
+  "author": "Senior Full-Stack Architect",
+  "license": "MIT"
+}

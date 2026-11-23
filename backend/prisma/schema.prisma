@@ -1,0 +1,207 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  fullName         String
+  avatarUrl        String?
+  role             String            @default("USER") // ADMIN, USER
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  contacts         Contact[]
+  templates        MessageTemplate[]
+  scheduledMessages ScheduledMessage[]
+  drafts           MessageDraft[]
+  rules            AutomationRule[]
+  activityLogs     ActivityLog[]
+  aiSetting        AISetting?
+  preferences      UserPreference?
+  integrations     Integration[]
+
+  @@map("users")
+}
+
+model Contact {
+  id               String            @id @default(uuid())
+  userId           String
+  name             String
+  fbId             String?           // Facebook Numeric ID (if known)
+  fbUsername       String?           // Messenger username/handle for m.me link: e.g. "john.doe" -> https://m.me/john.doe
+  avatarUrl        String?
+  relationshipType String            @default("FRIEND") // FRIEND, FAMILY, WORK, CRUSH, OTHER
+  phone            String?
+  email            String?
+  notes            String?
+  tags             String?           // JSON or comma separated: e.g. "dong_nghiep,quan_trong"
+  lastContactedAt  DateTime?
+  isFavorite       Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduledMessages ScheduledMessage[]
+  drafts           MessageDraft[]
+  activityLogs     ActivityLog[]
+
+  @@map("contacts")
+}
+
+model MessageTemplate {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  category    String   // MORNING, NIGHT, GREETING, BIRTHDAY, APOLOGY, THANKS, WORK, ROMANCE, OTHER
+  content     String
+  tags        String?
+  usageCount  Int      @default(0)
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("message_templates")
+}
+
+model ScheduledMessage {
+  id                   String    @id @default(uuid())
+  userId               String
+  contactId            String
+  content              String
+  scheduledAt          DateTime
+  recurrenceType       String    @default("ONCE") // ONCE, DAILY, WEEKLY, CUSTOM
+  recurrenceCustomDays String?   // e.g. "1,3,5" for Mon, Wed, Fri
+  status               String    @default("PENDING") // PENDING, NOTIFIED, CONFIRMED_MANUAL_SENT, CANCELLED, PAUSED
+  lastTriggeredAt      DateTime?
+  nextTriggeredAt      DateTime?
+  reminderMinutesBefore Int      @default(0)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact              Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@map("scheduled_messages")
+}
+
+model MessageDraft {
+  id               String   @id @default(uuid())
+  userId           String
+  contactId        String?
+  rawPrompt        String
+  context          String?
+  tone             String   // CUTE, FRIENDLY, ROMANTIC, FUNNY, POLITE, PROFESSIONAL, CARING, APOLOGETIC, MORNING, NIGHT
+  length           String   // SHORT, MEDIUM, LONG
+  generatedOptions String   // JSON string of generated alternatives
+  selectedOption   String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact          Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@map("message_drafts")
+}
+
+model AutomationRule {
+  id                String   @id @default(uuid())
+  userId            String
+  name              String
+  keywords          String   // comma separated or JSON array
+  replyContent      String
+  triggerCondition  String   @default("CONTAINS") // EXACT, CONTAINS, STARTS_WITH, REGEX
+  activeHoursStart  String?  // e.g. "08:00"
+  activeHoursEnd    String?  // e.g. "22:00"
+  isEnabled         Boolean  @default(true)
+  matchType         String   @default("SUGGEST") // SUGGEST (suggest reply with 1-click send), AUTO_META (if official api connected)
+  priority          Int      @default(0)
+  executionCount    Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("automation_rules")
+}
+
+model ActivityLog {
+  id               String   @id @default(uuid())
+  userId           String
+  actionType       String   // AI_GENERATE, SCHEDULE_CREATE, SCHEDULE_REMIND, COPY_MESSAGE, OPEN_MESSENGER, MANUAL_SENT_CONFIRMED, RULE_TRIGGERED, TEMPLATE_USE
+  content          String?
+  recipientName    String?
+  contactId        String?
+  processingMethod String   @default("MANUAL_CONFIRMED") // MANUAL_CONFIRMED, CLIPBOARD_COPY, DIRECT_META_API, DRAFT_ONLY
+  status           String   @default("DRAFT") // DRAFT, PENDING_CONFIRMATION, CONFIRMED_MANUAL_SENT, SENT_SUCCESS, FAILED, CANCELLED
+  metadata         String?  // JSON string
+  createdAt        DateTime @default(now())
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact          Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@map("activity_logs")
+}
+
+model AISetting {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  provider       String   @default("GEMINI") // GEMINI, OPENAI, OPENROUTER, CUSTOM_LOCAL
+  apiKey         String?  // Encrypted or hidden
+  customEndpoint String?
+  modelName      String   @default("gemini-1.5-flash")
+  temperature    Float    @default(0.7)
+  maxTokens      Int      @default(1000)
+  systemPrompt   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_settings")
+}
+
+model UserPreference {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  theme          String   @default("light") // light, dark, system
+  soundEnabled   Boolean  @default(true)
+  autoLaunch     Boolean  @default(false)
+  minimizeToTray Boolean  @default(true)
+  notifyDesktop  Boolean  @default(true)
+  reminderSound  String   @default("bell")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model Integration {
+  id            String   @id @default(uuid())
+  userId        String
+  platform      String   @default("META_MESSENGER") // META_MESSENGER, WEBHOOK
+  appId         String?
+  appSecret     String?
+  pageToken     String?
+  webhookSecret String?
+  verifyToken   String?
+  isConnected   Boolean  @default(false)
+  status        String   @default("DISCONNECTED")
+  metadata      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("integrations")
+}

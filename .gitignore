@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.tools/
+.cache/
+
+# Builds
+dist/
+dist-electron/
+build/
+release/
+*.exe
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Database
+*.sqlite
+*.sqlite-journal
+*.db
+prisma/dev.db
+backend/dev.db
+backend/prisma/dev.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
