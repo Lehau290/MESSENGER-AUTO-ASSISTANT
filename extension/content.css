@@ -1,0 +1,152 @@
+#ai-auto-assistant-pill {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 15px rgba(59, 130, 246, 0.2);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 280px;
+  max-width: 340px;
+  transition: all 0.25s ease-in-out;
+}
+
+#ai-auto-assistant-pill.minimized {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#ai-auto-assistant-pill.minimized .ai-pill-content {
+  display: none;
+}
+
+#ai-auto-assistant-pill.minimized .ai-pill-icon {
+  display: block;
+  font-size: 20px;
+}
+
+.ai-pill-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+}
+
+.ai-pill-title {
+  font-weight: 700;
+  font-size: 12px;
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-pill-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-pill-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ai-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.ai-pill-toggle {
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+}
+
+.ai-pill-toggle.off {
+  background: #475569;
+  color: #cbd5e1;
+}
+
+.ai-pill-status {
+  font-size: 11px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.ai-status-dot.idle {
+  background: #3b82f6;
+  box-shadow: 0 0 8px #3b82f6;
+}
+
+.ai-status-dot.sending {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: ai-pulse 1s infinite alternate;
+}
+
+.ai-status-dot.disabled {
+  background: #64748b;
+  box-shadow: none;
+}
+
+@keyframes ai-pulse {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.ai-pill-persona {
+  font-size: 11px;
+  color: #f472b6;
+  font-weight: 500;
+  background: rgba(244, 114, 182, 0.12);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(244, 114, 182, 0.25);
+}
+
+.ai-pill-last-log {
+  font-size: 11px;
+  color: #e2e8f0;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 6px 8px;
+  border-radius: 6px;
+  max-height: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}

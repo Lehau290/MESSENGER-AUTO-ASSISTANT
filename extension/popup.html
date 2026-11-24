@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Cài đặt AI Auto Reply</title>
+  <style>
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 16px;
+      margin: 0;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 13px;
+    }
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .field {
+      margin-bottom: 10px;
+    }
+    .field:last-child {
+      margin-bottom: 0;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #475569;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2563eb;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    .btn {
+      width: 100%;
+      padding: 9px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+    .note {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🤖 Messenger Auto AI</h2>
+
+  <div class="card">
+    <div class="toggle-row">
+      <div>
+        <div style="font-weight:700;">Tự động trả lời</div>
+        <div style="font-size:11px;color:#94a3b8;">Tự điền & tự gửi tin nhắn</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoReplyToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>Phong cách giao tiếp</label>
+      <select id="personaSelect">
+        <option value="OLDER_GF">Chị người yêu hơn 1 tuổi 💕</option>
+        <option value="CUTE">Đáng yêu, dễ thương 🌸</option>
+        <option value="ROMANTIC">Lãng mạn, ngọt ngào ❤️</option>
+        <option value="FRIENDLY">Thân thiện, cởi mở 😊</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Thời gian chờ giả lập gõ phím (Giây)</label>
+      <input type="number" id="delayInput" min="2" max="15" value="3">
+    </div>
+  </div>
+
+  <button class="btn" id="saveBtn">Lưu cài đặt</button>
+
+  <div class="note">
+    💡 Mẹo: Khi đang ở tab Messenger, bạn có thể bấm phím <b>F2</b> để kích hoạt AI trả lời tự động ngay lập tức!
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
